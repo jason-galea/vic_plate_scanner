@@ -19,8 +19,14 @@ BASE_URL = "https://vplates.com.au/"
 def check_combo_availability(driver: webdriver, combo: str):
     input_box = driver.find_element(By.ID, "quick-combo__combo")
     input_box.send_keys(combo)
+    time.sleep(2)
+
     button = driver.find_element(By.CLASS_NAME, "quick-combo__submit")
+    print(f"{button.text=}")
     button.click()
+
+    time.sleep(2)
+    print(f"{button.text=}")
 
     # time.sleep(5)
 
@@ -35,7 +41,7 @@ def check_combo_availability(driver: webdriver, combo: str):
     # print(f"{result_raw=}")
 
 
-    max_wait_time = 20
+    max_wait_time = 10
     for _ in range(max_wait_time):
         time.sleep(1)
 
@@ -61,7 +67,12 @@ def main():
 
     ### Boilerplate
     ff_opts = FirefoxOptions()
-    ff_opts.add_argument('-headless')
+    ff_opts.add_argument("window-size=1280,800")
+    # ff_opts.add_argument('--headless')
+    ff_opts.add_argument('--no-sandbox')
+    ff_opts.add_argument('--disable-dev-shm-usage')
+    ff_opts.add_argument('--disable-blink-features=AutomationControlled')
+    # ff_opts.add_argument(f'user-agent={userAgent}')
 
     driver = webdriver.Firefox(
         service=Service(executable_path="/usr/local/bin/geckodriver"),
@@ -69,16 +80,20 @@ def main():
     )
     driver.get(BASE_URL)
 
+    # print(driver.page_source)
+
 
 
     ### Submit form
+    check_combo_availability(driver, "IS001") ### Not available
+
     # input_box = driver.find_element(By.CLASS_NAME, "class name")
     # input_box.send_keys("IS003")
-    is_001_available = check_combo_availability(driver, "IS001") ### Not available
-    is_003_available = check_combo_availability(driver, "IS003") ### Available
+    # is_001_available = check_combo_availability(driver, "IS001") ### Not available
+    # is_003_available = check_combo_availability(driver, "IS003") ### Available
 
-    print(f"{is_001_available=}")
-    print(f"{is_003_available=}")
+    # print(f"{is_001_available=}")
+    # print(f"{is_003_available=}")
 
 
 
